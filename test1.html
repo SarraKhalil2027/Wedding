@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Invitation au mariage de Yassine & Salma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
+<style>
+  /* ============ COLORS (change here) ============ */
+  :root{
+    --green:#173b33;      /* deep emerald */
+    --green-2:#22513f;
+    --gold:#c9a45c;       /* gold details */
+    --gold-light:#e8d3a2;
+    --paper:#fbf7ef;      /* card background */
+    --ink:#2b2a26;        /* text */
+    --muted:#6f6a5e;
+    --script:'Pinyon Script', cursive;
+    --serif:'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    --arabic:'Amiri', 'Traditional Arabic', serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:var(--serif);
+    color:var(--ink);
+    background:var(--green);
+    background-image:radial-gradient(circle at 50% 0%, var(--green-2), var(--green) 70%);
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  body.locked{overflow:hidden}
+
+  /* ============ ENVELOPE INTRO ============ */
+  #intro{
+    position:fixed;inset:0;z-index:50;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;
+    background:var(--green);
+    background-image:radial-gradient(circle at 50% 40%, var(--green-2), var(--green) 75%);
+    transition:opacity 1s ease .9s, visibility 0s linear 1.9s;
+    padding:20px;
+  }
+  #intro.open{opacity:0;visibility:hidden}
+  .envelope{
+    position:relative;width:min(340px,86vw);aspect-ratio:3/2;cursor:pointer;
+    perspective:900px;border:none;background:none;
+  }
+  .envelope:focus-visible{outline:2px solid var(--gold);outline-offset:8px}
+  .env-body{
+    position:absolute;inset:0;background:#efe4cc;border-radius:4px;
+    box-shadow:0 20px 40px rgba(0,0,0,.35);
+  }
+  .env-front{
+    position:absolute;inset:0;border-radius:4px;z-index:3;
+    background:
+      linear-gradient(to top right, #e6d8b9 50%, transparent 50.5%) left/50% 100% no-repeat,
+      linear-gradient(to top left,  #e6d8b9 50%, transparent 50.5%) right/50% 100% no-repeat;
+  }
+  .env-flap{
+    position:absolute;left:0;right:0;top:0;height:62%;z-index:4;
+    background:#dccaa3;
+    clip-path:polygon(0 0,100% 0,50% 100%);
+    transform-origin:top;transition:transform .8s ease;
+  }
+  #intro.open .env-flap{transform:rotateX(180deg);z-index:1}
+  .seal{
+    position:absolute;left:50%;top:62%;z-index:5;
+    width:64px;height:64px;transform:translate(-50%,-50%);
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #a3342f, #6e1916);
+    display:grid;place-items:center;
+    color:var(--gold-light);font-family:var(--script);font-size:26px;
+    box-shadow:0 3px 8px rgba(0,0,0,.35), inset 0 0 0 4px rgba(0,0,0,.15);
+    transition:opacity .4s ease;
+  }
+  #intro.open .seal{opacity:0}
+  .tap{
+    color:var(--gold-light);font-size:1.15rem;font-style:italic;letter-spacing:.03em;
+    animation:pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse{50%{opacity:.45}}
+
+  /* ============ MUSIC BUTTON ============ */
+  #musicBtn{
+    position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:40;
+    width:48px;height:48px;border-radius:50%;
+    border:1px solid var(--gold);background:var(--green);color:var(--gold-light);
+    font-size:20px;cursor:pointer;display:none;align-items:center;justify-content:center;
+    box-shadow:0 6px 16px rgba(0,0,0,.3);
+  }
+  #musicBtn.show{display:flex}
+  #musicBtn.playing{animation:spin 6s linear infinite}
+  #musicBtn:focus-visible{outline:2px solid var(--gold-light);outline-offset:3px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ============ CARD ============ */
+  main{
+    max-width:560px;margin:0 auto;
+    padding:calc(28px + env(safe-area-inset-top,0px)) 16px calc(90px + env(safe-area-inset-bottom,0px));
+  }
+  .card{
+    background:var(--paper);
+    border-radius:6px;
+    padding:14px;
+    box-shadow:0 30px 60px rgba(0,0,0,.35);
+  }
+  .frame{
+    border:1px solid var(--gold);
+    outline:1px solid var(--gold);outline-offset:-7px;
+    border-radius:3px;
+    padding:48px 26px 40px;
+    text-align:center;
+  }
+  section + section{margin-top:44px}
+
+  .bismillah{font-family:var(--arabic);font-size:1.6rem;color:var(--green);line-height:1.4}
+  .verse{
+    font-family:var(--arabic);direction:rtl;
+    font-size:1.12rem;line-height:2;color:var(--ink);margin-top:14px;
+  }
+  .verse-ref{font-size:.9rem;color:var(--muted);margin-top:4px}
+
+  .ornament{display:block;margin:30px auto;width:150px;height:auto;color:var(--gold)}
+
+  .families{font-size:1.15rem;color:var(--muted);font-style:italic}
+
+  .names{
+    font-family:var(--script);font-weight:400;color:var(--green);
+    font-size:clamp(3.2rem,14vw,4.6rem);line-height:1.05;margin:18px 0 6px;
+  }
+  .names .amp{display:block;font-size:.55em;color:var(--gold);margin:4px 0}
+
+  .lead{font-size:1.18rem;max-width:34ch;margin:0 auto}
+
+  /* photo (hidden until you add photo.jpg) */
+  .photo{
+    width:min(260px,70%);aspect-ratio:3/4;margin:0 auto;
+    border-radius:130px 130px 6px 6px;overflow:hidden;
+    border:3px solid var(--gold-light);
+    box-shadow:0 0 0 1px var(--gold);
+  }
+  .photo img{width:100%;height:100%;object-fit:cover;display:block}
+
+  .date-block{display:flex;align-items:center;justify-content:center;gap:18px;color:var(--green)}
+  .date-block .side{font-size:1.05rem;padding:6px 0;border-top:1px solid var(--gold);border-bottom:1px solid var(--gold);min-width:84px}
+  .date-block .day{font-size:3.4rem;font-weight:600;line-height:1}
+  .date-month{font-size:1.3rem;color:var(--green);margin-top:8px}
+
+  h2{font-family:var(--script);font-weight:400;font-size:2.4rem;color:var(--green);line-height:1.2;margin-bottom:12px}
+
+  .countdown{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+  .unit{
+    width:68px;padding:10px 0;border:1px solid var(--gold);border-radius:4px;
+  }
+  .unit b{display:block;font-size:1.7rem;font-weight:600;color:var(--green);line-height:1.1}
+  .unit span{font-size:.85rem;color:var(--muted)}
+  .done{font-size:1.2rem;color:var(--green);font-style:italic}
+
+  .venue-name{font-size:1.35rem;font-weight:600;color:var(--green)}
+  .venue-addr{color:var(--muted)}
+
+  .btn{
+    display:inline-block;margin:16px 6px 0;padding:11px 22px;
+    font-family:var(--serif);font-size:1.05rem;font-weight:600;
+    color:var(--paper);background:var(--green);border:1px solid var(--green);
+    border-radius:40px;text-decoration:none;cursor:pointer;
+  }
+  .btn.ghost{background:transparent;color:var(--green)}
+  .btn:hover{background:var(--green-2)}
+  .btn.ghost:hover{background:var(--green);color:var(--paper)}
+  .btn:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+  .program{list-style:none;max-width:300px;margin:0 auto;text-align:left}
+  .program li{display:flex;gap:16px;padding:9px 0;border-bottom:1px dashed var(--gold-light)}
+  .program time{min-width:56px;font-weight:600;color:var(--green)}
+
+  .closing{font-style:italic;font-size:1.15rem;color:var(--muted)}
+  .sign{font-family:var(--script);font-size:2rem;color:var(--green);margin-top:8px}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+  }
+</style>
+</head>
+<body class="locked">
+
+<!-- ============ ENVELOPE (tap to open) ============ -->
+<div id="intro">
+  <button class="envelope" id="openBtn" aria-label="Ouvrir l'invitation">
+    <div class="env-body"></div>
+    <div class="env-flap"></div>
+    <div class="env-front"></div>
+    <div class="seal">Y&amp;S</div>
+  </button>
+  <p class="tap">Touchez l'enveloppe pour l'ouvrir</p>
+</div>
+
+<!-- ============ MUSIC ============ -->
+<!-- Step 3 later: put music.mp3 in the same folder as this file -->
+<audio id="music" src="music.mp3" loop preload="auto"></audio>
+<button id="musicBtn" aria-label="Couper la musique">♪</button>
+
+<!-- ============ INVITATION ============ -->
+<main>
+  <div class="card">
+    <div class="frame">
+
+      <section>
+        <p class="bismillah">بسم الله الرحمن الرحيم</p>
+        <p class="verse">وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً</p>
+        <p class="verse-ref">Sourate Ar-Rum, verset 21</p>
+      </section>
+
+      <svg class="ornament" viewBox="0 0 150 20" aria-hidden="true">
+        <path d="M0 10H55M95 10H150" stroke="currentColor" stroke-width="1"/>
+        <path d="M75 2l8 8-8 8-8-8z" fill="none" stroke="currentColor" stroke-width="1"/>
+        <circle cx="75" cy="10" r="2" fill="currentColor"/>
+        <circle cx="60" cy="10" r="1.5" fill="currentColor"/>
+        <circle cx="90" cy="10" r="1.5" fill="currentColor"/>
+      </svg>
+
+      <section>
+        <p class="families">Les familles Benali et Haddad<br>ont l'honneur de vous convier au mariage de leurs enfants</p>
+        <h1 class="names">Yassine<span class="amp">&amp;</span>Salma</h1>
+      </section>
+
+      <!-- Step 2 later: put photo.jpg in the same folder. It hides itself if missing. -->
+      <section class="photo" id="photoBox">
+        <img src="photo.jpg" alt="Yassine et Salma" onerror="document.getElementById('photoBox').remove()">
+      </section>
+
+      <section>
+        <div class="date-block">
+          <div class="side">Samedi</div>
+          <div class="day">20</div>
+          <div class="side">19h30</div>
+        </div>
+        <p class="date-month">Juin 2027</p>
+      </section>
+
+      <section>
+        <h2>Le grand jour approche</h2>
+        <div class="countdown" id="countdown">
+          <div class="unit"><b id="d">0</b><span>jours</span></div>
+          <div class="unit"><b id="h">0</b><span>heures</span></div>
+          <div class="unit"><b id="m">0</b><span>minutes</span></div>
+          <div class="unit"><b id="s">0</b><span>secondes</span></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Le lieu</h2>
+        <p class="venue-name">Salle des fêtes Le Jasmin</p>
+        <p class="venue-addr">12 rue des Oliviers, 2000 Neuchâtel</p>
+        <a class="btn" id="mapBtn" target="_blank" rel="noopener">Voir sur Google Maps</a>
+        <a class="btn ghost" id="calBtn" target="_blank" rel="noopener">Ajouter au calendrier</a>
+      </section>
+
+      <section>
+        <h2>Programme</h2>
+        <ul class="program">
+          <li><time>19h30</time><span>Accueil des invités</span></li>
+          <li><time>20h30</time><span>Entrée des mariés</span></li>
+          <li><time>21h30</time><span>Dîner</span></li>
+          <li><time>23h00</time><span>Gâteau et soirée</span></li>
+        </ul>
+      </section>
+
+      <svg class="ornament" viewBox="0 0 150 20" aria-hidden="true">
+        <path d="M0 10H55M95 10H150" stroke="currentColor" stroke-width="1"/>
+        <path d="M75 2l8 8-8 8-8-8z" fill="none" stroke="currentColor" stroke-width="1"/>
+        <circle cx="75" cy="10" r="2" fill="currentColor"/>
+      </svg>
+
+      <section>
+        <p class="closing">Votre présence sera notre plus beau cadeau</p>
+        <p class="sign">Yassine &amp; Salma</p>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<script>
+  /* ============ YOUR DETAILS (change here) ============ */
+  const WEDDING_DATE = new Date("2027-06-20T19:30:00"); // year-month-day T hour:minute
+  const VENUE_ADDRESS = "12 rue des Oliviers, 2000 Neuchâtel";
+  const EVENT_TITLE = "Mariage de Yassine & Salma";
+
+  /* Map + calendar links */
+  document.getElementById("mapBtn").href =
+    "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(VENUE_ADDRESS);
+  const fmt = d => d.toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
+  const end = new Date(WEDDING_DATE.getTime() + 5*3600*1000);
+  document.getElementById("calBtn").href =
+    "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent(EVENT_TITLE) +
+    "&dates=" + fmt(WEDDING_DATE) + "/" + fmt(end) + "&location=" + encodeURIComponent(VENUE_ADDRESS);
+
+  /* Countdown */
+  function tick(){
+    const diff = WEDDING_DATE - new Date();
+    const box = document.getElementById("countdown");
+    if (diff <= 0){ box.innerHTML = '<p class="done">C\'est aujourd\'hui !</p>'; return; }
+    document.getElementById("d").textContent = Math.floor(diff/864e5);
+    document.getElementById("h").textContent = Math.floor(diff/36e5)%24;
+    document.getElementById("m").textContent = Math.floor(diff/6e4)%60;
+    document.getElementById("s").textContent = Math.floor(diff/1e3)%60;
+    setTimeout(tick, 1000);
+  }
+  tick();
+
+  /* Envelope + music */
+  const intro = document.getElementById("intro");
+  const music = document.getElementById("music");
+  const musicBtn = document.getElementById("musicBtn");
+
+  document.getElementById("openBtn").addEventListener("click", () => {
+    intro.classList.add("open");
+    document.body.classList.remove("locked");
+    music.play().then(() => {
+      musicBtn.classList.add("show","playing");
+    }).catch(() => { /* no music.mp3 yet: button stays hidden */ });
+  });
+
+  musicBtn.addEventListener("click", () => {
+    if (music.paused){ music.play(); musicBtn.classList.add("playing"); musicBtn.setAttribute("aria-label","Couper la musique"); }
+    else { music.pause(); musicBtn.classList.remove("playing"); musicBtn.setAttribute("aria-label","Lancer la musique"); }
+  });
+</script>
+</body>
+</html>
