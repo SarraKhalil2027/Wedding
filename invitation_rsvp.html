@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Invitation au mariage de Khalil & Sarra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+  /* ============ COLORS (change here) ============ */
+  :root{
+    --green:#173b33;      /* deep emerald */
+    --green-2:#22513f;
+    --gold:#c9a45c;       /* gold details */
+    --gold-light:#e8d3a2;
+    --paper:#fbf7ef;      /* card background */
+    --ink:#2b2a26;        /* text */
+    --muted:#6f6a5e;
+    --script:'Great Vibes', cursive;   /* names, titles, seal.
+       Other options: replace "Great+Vibes" in the Google Fonts link above
+       and the name here with e.g. Parisienne, Allura, Italianno */
+    --serif:'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    --arabic:'Amiri', 'Traditional Arabic', serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:var(--serif);
+    color:var(--ink);
+    background:var(--green);
+    background-image:radial-gradient(circle at 50% 0%, var(--green-2), var(--green) 70%);
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  body.locked{overflow:hidden}
+
+  /* ============ ENVELOPE INTRO ============ */
+  #intro{
+    position:fixed;inset:0;z-index:50;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;
+    background:var(--green);
+    background-image:radial-gradient(circle at 50% 40%, var(--green-2), var(--green) 75%);
+    transition:opacity 1s ease .9s, visibility 0s linear 1.9s;
+    padding:20px;
+  }
+  #intro.open{opacity:0;visibility:hidden}
+  .envelope{
+    position:relative;width:min(340px,86vw);aspect-ratio:3/2;cursor:pointer;
+    perspective:900px;border:none;background:none;
+  }
+  .envelope:focus-visible{outline:2px solid var(--gold);outline-offset:8px}
+  .env-body{
+    position:absolute;inset:0;background:#efe4cc;border-radius:4px;
+    box-shadow:0 20px 40px rgba(0,0,0,.35);
+  }
+  .env-front{
+    position:absolute;inset:0;border-radius:4px;z-index:3;
+    background:
+      linear-gradient(to top right, #e6d8b9 50%, transparent 50.5%) left/50% 100% no-repeat,
+      linear-gradient(to top left,  #e6d8b9 50%, transparent 50.5%) right/50% 100% no-repeat;
+  }
+  .env-flap{
+    position:absolute;left:0;right:0;top:0;height:62%;z-index:4;
+    background:#dccaa3;
+    clip-path:polygon(0 0,100% 0,50% 100%);
+    transform-origin:top;transition:transform .8s ease;
+  }
+  #intro.open .env-flap{transform:rotateX(180deg);z-index:1}
+  .seal{
+    position:absolute;left:50%;top:62%;z-index:5;
+    width:72px;height:72px;transform:translate(-50%,-50%);
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #a3342f, #6e1916);
+    display:grid;place-items:center;
+    padding:12px;overflow:hidden;white-space:nowrap;
+    color:var(--gold-light);font-family:var(--script);font-size:15px;line-height:1;
+    box-shadow:0 3px 8px rgba(0,0,0,.35), inset 0 0 0 4px rgba(0,0,0,.15);
+    transition:opacity .4s ease;
+  }
+  #intro.open .seal{opacity:0}
+  .tap{
+    color:var(--gold-light);font-size:1.15rem;font-style:italic;letter-spacing:.03em;
+    animation:pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse{50%{opacity:.45}}
+
+  /* ============ MUSIC BUTTON ============ */
+  #musicBtn{
+    position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:40;
+    width:48px;height:48px;border-radius:50%;
+    border:1px solid var(--gold);background:var(--green);color:var(--gold-light);
+    font-size:20px;cursor:pointer;display:none;align-items:center;justify-content:center;
+    box-shadow:0 6px 16px rgba(0,0,0,.3);
+  }
+  #musicBtn.show{display:flex}
+  #musicBtn.playing{animation:spin 6s linear infinite}
+  #musicBtn:focus-visible{outline:2px solid var(--gold-light);outline-offset:3px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ============ CARD ============ */
+  main{
+    max-width:560px;margin:0 auto;
+    padding:calc(28px + env(safe-area-inset-top,0px)) 16px calc(90px + env(safe-area-inset-bottom,0px));
+  }
+  .card{
+    background:var(--paper);
+    border-radius:6px;
+    padding:14px;
+    box-shadow:0 30px 60px rgba(0,0,0,.35);
+  }
+  .frame{
+    border:1px solid var(--gold);
+    outline:1px solid var(--gold);outline-offset:-7px;
+    border-radius:3px;
+    padding:48px 26px 40px;
+    text-align:center;
+  }
+  section + section{margin-top:44px}
+
+  .bismillah{font-family:var(--arabic);font-size:1.6rem;color:var(--green);line-height:1.4}
+  .verse{
+    font-family:var(--arabic);direction:rtl;
+    font-size:1.12rem;line-height:2;color:var(--ink);margin-top:14px;
+  }
+  .verse-ref{font-size:.9rem;color:var(--muted);margin-top:4px}
+
+  .ornament{display:block;margin:30px auto;width:150px;height:auto;color:var(--gold)}
+
+  .families{font-size:1.15rem;color:var(--muted);font-style:italic}
+
+  .names{
+    font-family:var(--script);font-weight:400;color:var(--green);
+    font-size:clamp(3.2rem,14vw,4.6rem);line-height:1.05;margin:18px 0 6px;
+  }
+  .names .amp{display:block;font-size:.55em;color:var(--gold);margin:4px 0}
+
+  .lead{font-size:1.18rem;max-width:34ch;margin:0 auto}
+
+  /* photo (hidden until you add photo.png) */
+  .photo{
+    width:min(260px,70%);aspect-ratio:3/4;margin:0 auto;
+    border-radius:130px 130px 6px 6px;overflow:hidden;
+    border:3px solid var(--gold-light);
+    box-shadow:0 0 0 1px var(--gold);
+  }
+  .photo img{width:100%;height:100%;object-fit:cover;display:block}
+
+  .date-block{display:flex;align-items:center;justify-content:center;gap:18px;color:var(--green)}
+  .date-block .side{font-size:1.05rem;padding:6px 0;border-top:1px solid var(--gold);border-bottom:1px solid var(--gold);min-width:84px}
+  .date-block .day{font-size:3.4rem;font-weight:600;line-height:1}
+  .date-month{font-size:1.3rem;color:var(--green);margin-top:8px}
+
+  h2{font-family:var(--script);font-weight:400;font-size:2.4rem;color:var(--green);line-height:1.2;margin-bottom:12px}
+
+  .countdown{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+  .unit{
+    width:68px;padding:10px 0;border:1px solid var(--gold);border-radius:4px;
+  }
+  .unit b{display:block;font-size:1.7rem;font-weight:600;color:var(--green);line-height:1.1}
+  .unit span{font-size:.85rem;color:var(--muted)}
+  .done{font-size:1.2rem;color:var(--green);font-style:italic}
+
+  .venue-name{font-size:1.35rem;font-weight:600;color:var(--green)}
+  .venue-addr{color:var(--muted)}
+
+  .btn{
+    display:inline-block;margin:16px 6px 0;padding:11px 22px;
+    font-family:var(--serif);font-size:1.05rem;font-weight:600;
+    color:var(--paper);background:var(--green);border:1px solid var(--green);
+    border-radius:40px;text-decoration:none;cursor:pointer;
+  }
+  .btn.ghost{background:transparent;color:var(--green)}
+  .btn:hover{background:var(--green-2)}
+  .btn.ghost:hover{background:var(--green);color:var(--paper)}
+  .btn:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+  .program{list-style:none;max-width:300px;margin:0 auto;text-align:left}
+  .program li{display:flex;gap:16px;padding:9px 0;border-bottom:1px dashed var(--gold-light)}
+  .program time{min-width:56px;font-weight:600;color:var(--green)}
+
+
+  /* ============ RSVP / CONFIRMATION DE PRÉSENCE ============ */
+  .rsvp-form{max-width:340px;margin:0 auto;text-align:left}
+  .rsvp-intro{color:var(--muted);margin:0 auto 18px;max-width:34ch}
+  .rsvp-form label{display:block;color:var(--green);font-weight:600;margin:12px 0 5px}
+  .rsvp-form input,.rsvp-form select{
+    width:100%;padding:11px 12px;border:1px solid var(--gold-light);
+    border-radius:4px;background:#fffdf8;color:var(--ink);font:inherit;
+  }
+  .rsvp-form input:focus,.rsvp-form select:focus{outline:2px solid var(--gold);outline-offset:1px}
+  .rsvp-form .btn{width:100%;margin:18px 0 0}
+  #rsvpStatus{margin-top:12px;text-align:center;color:var(--green);font-weight:600}
+  #rsvpStatus.error{color:#9b2c2c}
+  .rsvp-note{font-size:.88rem;color:var(--muted);text-align:center;margin-top:10px}
+
+  .closing{font-style:italic;font-size:1.15rem;color:var(--muted)}
+  .sign{font-family:var(--script);font-size:2rem;color:var(--green);margin-top:8px}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+  }
+</style>
+</head>
+<body class="locked">
+
+<!-- ============ ENVELOPE (tap to open) ============ -->
+<div id="intro">
+  <button class="envelope" id="openBtn" aria-label="Ouvrir l'invitation">
+    <div class="env-body"></div>
+    <div class="env-flap"></div>
+    <div class="env-front"></div>
+    <div class="seal">K ;&amp; S</div>
+  </button>
+  <p class="tap">Touchez l'enveloppe pour l'ouvrir</p>
+</div>
+
+<!-- ============ MUSIC ============ -->
+<!-- Step 3 later: put music.mp3 in the same folder as this file -->
+<audio id="music" src="music.mp3" loop preload="auto"></audio>
+<button id="musicBtn" aria-label="Couper la musique">♪</button>
+
+<!-- ============ INVITATION ============ -->
+<main>
+  <div class="card">
+    <div class="frame">
+
+      <section>
+        <p class="bismillah">بسم الله الرحمن الرحيم</p>
+        <p class="verse">وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً</p>
+        <p class="verse-ref">Sourate Ar-Rum, verset 21</p>
+      </section>
+
+      <svg class="ornament" viewBox="0 0 150 20" aria-hidden="true">
+        <path d="M0 10H55M95 10H150" stroke="currentColor" stroke-width="1"/>
+        <path d="M75 2l8 8-8 8-8-8z" fill="none" stroke="currentColor" stroke-width="1"/>
+        <circle cx="75" cy="10" r="2" fill="currentColor"/>
+        <circle cx="60" cy="10" r="1.5" fill="currentColor"/>
+        <circle cx="90" cy="10" r="1.5" fill="currentColor"/>
+      </svg>
+
+      <section>
+        <p class="families">La famille de Mr Bouchoucha Rached et Mme Ouesleti Thouraya<br>&amp;<br> La famille de Mr Sfar Ali et Mme Sbaa Saida<br>ont l'honneur de vous convier au mariage de leurs enfants</p>
+        <h1 class="names">Khalil<span class="amp">&amp;</span>Sarra</h1>
+      </section>
+
+      <!-- Step 2 later: put photo.png in the same folder. It hides itself if missing. -->
+      <section class="photo" id="photoBox">
+        <img src="photo.png" alt="Khalil et Sarra" onerror="document.getElementById('photoBox').remove()">
+      </section>
+
+      <section>
+        <div class="date-block">
+          <div class="side">Samedi</div>
+          <div class="day">27</div>
+          <div class="side">20h00</div>
+        </div>
+        <p class="date-month">Mars 2027</p>
+      </section>
+
+      <section>
+        <h2>Le grand jour approche</h2>
+        <div class="countdown" id="countdown">
+          <div class="unit"><b id="d">0</b><span>jours</span></div>
+          <div class="unit"><b id="h">0</b><span>heures</span></div>
+          <div class="unit"><b id="m">0</b><span>minutes</span></div>
+          <div class="unit"><b id="s">0</b><span>secondes</span></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Le lieu</h2>
+        <p class="venue-name">Palais des fêtes L'Élysée</p>
+        <p class="venue-addr">12 Rue Mongi Slim, 2000, Tunisie</p>
+        <a class="btn" id="mapBtn" target="_blank" rel="noopener">Voir sur Google Maps</a>
+        <a class="btn ghost" id="calBtn" target="_blank" rel="noopener">Ajouter au calendrier</a>
+      </section>
+
+      <section>
+        <h2>Programme</h2>
+        <ul class="program">
+          <li><time>20h00</time><span>Signature du Contrat</span></li>
+          <li><time>21h00</time><span>Cérémonie</span></li>
+        </ul>
+      </section>
+
+      <section id="rsvp">
+        <h2>Confirmation de présence</h2>
+        <p class="rsvp-intro">Merci de nous confirmer votre présence pour nous aider à préparer ce jour inoubliable.</p>
+        <form class="rsvp-form" id="rsvpForm">
+          <label for="rsvpNom">Nom</label>
+          <input id="rsvpNom" name="nom" type="text" autocomplete="family-name" required>
+
+          <label for="rsvpPrenom">Prénom</label>
+          <input id="rsvpPrenom" name="prenom" type="text" autocomplete="given-name" required>
+
+          <label for="rsvpPresence">Serez-vous présent(e) ?</label>
+          <select id="rsvpPresence" name="presence" required>
+            <option value="">Choisir une réponse</option>
+            <option value="Oui">Oui, avec plaisir</option>
+            <option value="Non">Non, malheureusement</option>
+          </select>
+
+          <div id="rsvpCountWrap">
+            <label for="rsvpNombre">Nombre de personnes (vous compris)</label>
+            <input id="rsvpNombre" name="nombre" type="number" min="1" max="20" value="1" required>
+          </div>
+
+          <button class="btn" id="rsvpSubmit" type="submit">Confirmer ma réponse</button>
+          <p id="rsvpStatus" role="status" aria-live="polite"></p>
+          <p class="rsvp-note">Vos informations servent uniquement à organiser la réception.</p>
+        </form>
+      </section>
+
+      <svg class="ornament" viewBox="0 0 150 20" aria-hidden="true">
+        <path d="M0 10H55M95 10H150" stroke="currentColor" stroke-width="1"/>
+        <path d="M75 2l8 8-8 8-8-8z" fill="none" stroke="currentColor" stroke-width="1"/>
+        <circle cx="75" cy="10" r="2" fill="currentColor"/>
+      </svg>
+
+      <section>
+        <p class="closing">Votre présence sera notre plus beau cadeau</p>
+        <p class="sign">Khalil &amp; Sarra</p>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<script>
+  /* ============ YOUR DETAILS (change here) ============ */
+  const WEDDING_DATE = new Date("2027-03-27T20:00:00"); // year-month-day T hour:minute
+  const VENUE_ADDRESS = "12 Rue Mongi Slim, 2000, Tunisie";
+
+  /* PASTE YOUR GOOGLE MAPS LINK BETWEEN THE QUOTES BELOW
+     (Google Maps → find the venue → Share → Copy link, e.g. https://maps.app.goo.gl/xxxx)
+     If left empty, the button searches for the venue name + address instead. */
+  const MAPS_LINK = "";
+  const EVENT_TITLE = "Mariage de Khalil & Sarra";
+
+  /* Map + calendar links */
+  document.getElementById("mapBtn").href = MAPS_LINK.trim() ||
+    "https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent("Palais des fêtes L'Élysée, " + VENUE_ADDRESS);
+  const fmt = d => d.toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
+  const end = new Date(WEDDING_DATE.getTime() + 5*3600*1000);
+  document.getElementById("calBtn").href =
+    "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent(EVENT_TITLE) +
+    "&dates=" + fmt(WEDDING_DATE) + "/" + fmt(end) + "&location=" + encodeURIComponent(VENUE_ADDRESS);
+
+  /* Countdown */
+  function tick(){
+    const diff = WEDDING_DATE - new Date();
+    const box = document.getElementById("countdown");
+    if (diff <= 0){ box.innerHTML = '<p class="done">C\'est aujourd\'hui !</p>'; return; }
+    document.getElementById("d").textContent = Math.floor(diff/864e5);
+    document.getElementById("h").textContent = Math.floor(diff/36e5)%24;
+    document.getElementById("m").textContent = Math.floor(diff/6e4)%60;
+    document.getElementById("s").textContent = Math.floor(diff/1e3)%60;
+    setTimeout(tick, 1000);
+  }
+  tick();
+
+  /* RSVP: collez ici l'URL de l'application Web Google Apps Script déployée */
+  const RSVP_SCRIPT_URL = "COLLEZ_ICI_URL_DE_VOTRE_APPLICATION_WEB";
+
+  const rsvpForm = document.getElementById("rsvpForm");
+  const rsvpPresence = document.getElementById("rsvpPresence");
+  const rsvpNombre = document.getElementById("rsvpNombre");
+  const rsvpCountWrap = document.getElementById("rsvpCountWrap");
+  const rsvpStatus = document.getElementById("rsvpStatus");
+  const rsvpSubmit = document.getElementById("rsvpSubmit");
+
+  function updateRsvpCount() {
+    const attending = rsvpPresence.value === "Oui";
+    rsvpCountWrap.hidden = !attending;
+    rsvpNombre.required = attending;
+    if (!attending) rsvpNombre.value = "0";
+    else if (Number(rsvpNombre.value) < 1) rsvpNombre.value = "1";
+  }
+  rsvpPresence.addEventListener("change", updateRsvpCount);
+  updateRsvpCount();
+
+  rsvpForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    rsvpStatus.classList.remove("error");
+    if (!RSVP_SCRIPT_URL.startsWith("https://script.google.com/macros/s/")) {
+      rsvpStatus.textContent = "Le formulaire n'est pas encore relié à Google Sheets. Consultez les instructions fournies avec l'invitation.";
+      rsvpStatus.classList.add("error");
+      return;
+    }
+
+    const data = {
+      nom: document.getElementById("rsvpNom").value.trim(),
+      prenom: document.getElementById("rsvpPrenom").value.trim(),
+      presence: rsvpPresence.value,
+      nombre: rsvpPresence.value === "Oui" ? Number(rsvpNombre.value) : 0
+    };
+    if (!data.nom || !data.prenom || !data.presence ||
+        (data.presence === "Oui" && (!Number.isInteger(data.nombre) || data.nombre < 1 || data.nombre > 20))) {
+      rsvpStatus.textContent = "Veuillez vérifier les informations saisies.";
+      rsvpStatus.classList.add("error");
+      return;
+    }
+
+    rsvpSubmit.disabled = true;
+    rsvpSubmit.textContent = "Envoi en cours…";
+    rsvpStatus.textContent = "";
+    try {
+      /* Apps Script reçoit la requête et écrit la réponse dans le Google Sheet. */
+      await fetch(RSVP_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"},
+        body: new URLSearchParams(data).toString()
+      });
+      rsvpStatus.textContent = "Merci ! Votre réponse a été envoyée.";
+      rsvpForm.reset();
+      rsvpNombre.value = "1";
+      updateRsvpCount();
+    } catch (error) {
+      rsvpStatus.textContent = "L'envoi a échoué. Veuillez réessayer.";
+      rsvpStatus.classList.add("error");
+    } finally {
+      rsvpSubmit.disabled = false;
+      rsvpSubmit.textContent = "Confirmer ma réponse";
+    }
+  });
+
+  /* Envelope + music */
+  const intro = document.getElementById("intro");
+  const music = document.getElementById("music");
+  const musicBtn = document.getElementById("musicBtn");
+
+  document.getElementById("openBtn").addEventListener("click", () => {
+    intro.classList.add("open");
+    document.body.classList.remove("locked");
+    music.play().then(() => {
+      musicBtn.classList.add("show","playing");
+    }).catch(() => { /* no music.mp3 yet: button stays hidden */ });
+  });
+
+  musicBtn.addEventListener("click", () => {
+    if (music.paused){ music.play(); musicBtn.classList.add("playing"); musicBtn.setAttribute("aria-label","Couper la musique"); }
+    else { music.pause(); musicBtn.classList.remove("playing"); musicBtn.setAttribute("aria-label","Lancer la musique"); }
+  });
+</script>
+</body>
+</html>
